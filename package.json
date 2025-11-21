@@ -20,14 +20,14 @@
     "development",
     "sdk"
   ],
-  "author": "",
+  "author": "Daniel Georgiev <daniel@dabanny.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:dgeorgiev/twillio-sms-mock.git"
   },
   "bugs": {
-    "url": "git@github.com:dgeorgiev/twillio-sms-mock.git"
+    "url": "https://github.com/dgeorgiev/twillio-sms-mock/issues"
   },
   "homepage": "https://github.com/dgeorgiev/twillio-sms-mock",
   "dependencies": {
