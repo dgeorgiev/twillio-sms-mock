@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twillio Mock - SMS Messages</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: #0d122b;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            flex: 1;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d122b;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #0d122b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1a1f3a;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+        .message-to {
+            font-weight: 600;
+            color: #0d122b;
+        }
+
+        .message-from {
+            color: #666;
+        }
+
+        .message-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: #28a745;
+            color: white;
+        }
+
+        .message-body {
+            padding: 20px;
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .message-sid {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+            font-size: 12px;
+            color: #999;
+            font-family: 'Courier New', monospace;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 60px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .auto-refresh input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                flex-direction: column;
+            }
+
+            .message-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📱 Twillio Mock - SMS Messages</h1>
+        <div class="subtitle">Local SMS testing server</div>
+    </div>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="label">Total Messages</div>
+                <div class="value" id="totalMessages">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Last Message</div>
+                <div class="value" style="font-size: 16px;" id="lastMessage">Never</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" onclick="refreshMessages()">🔄 Refresh</button>
+            <button class="btn-danger" onclick="clearMessages()">🗑️ Clear All</button>
+            <div class="auto-refresh">
+                <input type="checkbox" id="autoRefresh" checked onchange="toggleAutoRefresh()">
+                <label for="autoRefresh">Auto-refresh (5s)</label>
+            </div>
+        </div>
+
+        <div class="messages" id="messages">
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>No messages yet</h3>
+                <p>Messages will appear here when your app sends SMS through Twillio</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval = null;
+
+        async function refreshMessages() {
+            try {
+                const response = await fetch('/api/messages');
+                const messages = await response.json();
+                
+                document.getElementById('totalMessages').textContent = messages.length;
+                
+                if (messages.length > 0) {
+                    const lastMsg = new Date(messages[0].date_created);
+                    document.getElementById('lastMessage').textContent = formatTimeAgo(lastMsg);
+                    renderMessages(messages);
+                } else {
+                    document.getElementById('lastMessage').textContent = 'Never';
+                    showEmptyState();
+                }
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        }
+
+        function renderMessages(messages) {
+            const container = document.getElementById('messages');
+            
+            if (messages.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => `
+                <div class="message-card">
+                    <div class="message-header">
+                        <div class="message-meta">
+                            <span class="message-to">To: ${msg.to}</span>
+                            <span class="message-from">From: ${msg.from}</span>
+                            <span class="message-time">${formatTime(msg.date_created)}</span>
+                        </div>
+                        <span class="status-badge">${msg.status}</span>
+                    </div>
+                    <div class="message-body">
+                        <div class="message-text">${escapeHtml(msg.body)}</div>
+                        <div class="message-sid">SID: ${msg.sid}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showEmptyState() {
+            const container = document.getElementById('messages');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <h3>No messages yet</h3>
+                    <p>Messages will appear here when your app sends SMS through Twillio</p>
+                </div>
+            `;
+        }
+
+        async function clearMessages() {
+            if (!confirm('Are you sure you want to clear all messages?')) {
+                return;
+            }
+
+            try {
+                await fetch('/api/messages', { method: 'DELETE' });
+                refreshMessages();
+            } catch (error) {
+                console.error('Error clearing messages:', error);
+            }
+        }
+
+        function toggleAutoRefresh() {
+            const checkbox = document.getElementById('autoRefresh');
+            
+            if (checkbox.checked) {
+                autoRefreshInterval = setInterval(refreshMessages, 5000);
+            } else {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+
+        function formatTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            if (seconds < 60) return `${seconds}s ago`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            return `${Math.floor(seconds / 86400)}d ago`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initial load
+        refreshMessages();
+        
+        // Start auto-refresh
+        autoRefreshInterval = setInterval(refreshMessages, 5000);
+    </script>
+</body>
+</html>

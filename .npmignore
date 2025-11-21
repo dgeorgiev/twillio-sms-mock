@@ -1,0 +1,35 @@
+# Source files
+src/
+*.ts
+!*.d.ts
+
+# Development files
+tsconfig.json
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Examples
+examples/
+src/examples/
+
+# Documentation
+*.md
+!README.md
+
+# Tests
+test/
+tests/
+*.test.ts
+*.spec.ts
+
+# Development config
+.env
+.env.example
+.gitignore
+.npmignore
+
+# Build config
+tsconfig.json
+
