@@ -1,5 +1,8 @@
 # Twillio Mock Server
 
+![npm version](https://img.shields.io/npm/v/twillio-sms-mock?style=for-the-badge)
+![npm downloads](https://img.shields.io/npm/dm/twillio-sms-mock?style=for-the-badge)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/twillio-sms-mock?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
